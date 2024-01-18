@@ -22,11 +22,11 @@ int SendTelegramMessage(String message)
 String ConstructMessage()
 {
 
-  String message = "----------------------------------------------------------------\n";
-  message += "                       SolarESP is alive!\n";
+  String message = "--------------------------------------------\n";
+  message += "            SolarESP is alive!\n";
 
   // WiFi connection
-  message += "----------------------------------------------------------------\n";
+  message += "--------------------------------------------\n";
   if (WiFiConnectionSuccess == 0)
   {
     message += "Connected to SSID: " + String(SSID) + "\n";
@@ -38,7 +38,7 @@ String ConstructMessage()
   }
 
   // Time connection
-  message += "----------------------------------------------------------------\n";
+  message += "--------------------------------------------\n";
   if (TimeConnectionSuccess == 0)
   {
     message += "Time Stamp: " + String(TimeArray[0]) + ":" + String(TimeArray[1]) + ":" + String(TimeArray[2]) +
@@ -50,7 +50,7 @@ String ConstructMessage()
   }
 
   // OpenWeather connection
-  message += "----------------------------------------------------------------\n";
+  message += "--------------------------------------------\n";
   if (OpenWeatherConnectionSuccess == 0)
   {
     message += "Weather by OpenWeather: " + OpenWeather_Weather + "\n";
@@ -75,7 +75,7 @@ String ConstructMessage()
   }
 
   // INA220 and HDC2080 status
-  message += "----------------------------------------------------------------\n";
+  message += "--------------------------------------------\n";
   if (ina220_bat_found == 0)
   {
     message += "Battery Voltage: " + String(batt_voltage) + " mV\n";
@@ -107,7 +107,7 @@ String ConstructMessage()
   }
 
   // Battery status
-  message += "----------------------------------------------------------------\n";
+  message += "--------------------------------------------\n";
   if (batt_voltage < LOW_BAT_mV && batt_voltage > 0)
   {
     if (batt_voltage < EXREME_LOW_BAT_mV && batt_voltage > 0)
@@ -122,7 +122,7 @@ String ConstructMessage()
   }
 
   // Sleep time status
-  message += "----------------------------------------------------------------\n";
+  message += "--------------------------------------------\n";
   if (SleepTimeChanged == 0)
   {
     message += "Sleep time changed to " + String(DEEP_SLEEP_TIME) + " s\n";
@@ -133,7 +133,7 @@ String ConstructMessage()
   }
 
   // MQTT status
-  message += "----------------------------------------------------------------\n";
+  message += "--------------------------------------------\n";
   if (MQTTConnectionSuccess == 0)
   {
     message += "MQTT publish successful\n";
@@ -143,7 +143,7 @@ String ConstructMessage()
     message += "MQTT connection failed\n";
   }
 
-  message += "----------------------------------------------------------------\n";
+  message += "--------------------------------------------\n";
   message += "Going to sleep for " + String(DEEP_SLEEP_TIME) + " s\n";
   message += "Next Wake-Up: " + String(WakeUpTimeArray[0]) + ":" + String(WakeUpTimeArray[1]) + " " + String(WakeUpDateArray[0]) + "/" + String(WakeUpDateArray[1]) + "/" + String(WakeUpDateArray[2]);
 
