@@ -5,7 +5,7 @@
 /* |____/ \___/|_|\__,_|_|  |_____|____/|_|     */
 /*   https://github.com/chieftain0/SolarESP     */
 
-// Search for ******** and replace them with your data
+// Search for "ABCDEFGH" and replace them with your data
 #include <Wire.h>
 #include "INA219.h"
 #include <HDC2080.h>
@@ -37,10 +37,10 @@ int WakeUpDateArray[3] = {-1, -1, -1}; // dd/mm/yyyy
 
 // WiFi settings
 bool isEAP = true; // true - Enterprise, false - Non Enterprise
-String EAP_IDENTITY = "********";
-String EAP_USERNAME = "********";
-String EAP_PASSWORD = "********";
-String SSID = "********";
+String EAP_IDENTITY = "ABCDEFGH";
+String EAP_USERNAME = "ABCDEFGH";
+String EAP_PASSWORD = "ABCDEFGH";
+String SSID = "ABCDEFGH";
 
 // NTP settings
 #define TimeZone 4 // UAE timezone
@@ -53,7 +53,7 @@ int TimeArray[3] = {0, 0, 0}; // hh:mm:ss
 int DateArray[3] = {0, 0, 0}; // dd/mm/yyyy
 
 // OpenWeather settings
-String OpenWeatherAPIkey = "********";
+String OpenWeatherAPIkey = "ABCDEFGH";
 String city = "Abu Dhabi";
 String countryCode = "AE";
 String serverURL = "http://api.openweathermap.org/data/2.5/weather?q=" + city + "," + countryCode + "&APPID=" + OpenWeatherAPIkey + "&units=metric";
@@ -79,14 +79,14 @@ UnixTime UnixStamp(TimeZone);
 // MQTT settings
 #define AIO_SERVER "io.adafruit.com"
 #define AIO_SERVERPORT 8883
-#define AIO_USERNAME "********"
-#define AIO_KEY "********"
+#define AIO_USERNAME "ABCDEFGH"
+#define AIO_KEY "ABCDEFGH"
 WiFiClientSecure SolarESP_WiFiClientSecure; // Client name for SSL/TLS communication
 Adafruit_MQTT_Client mqtt(&SolarESP_WiFiClientSecure, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
 
 // Telegram settings
-String authToken = "********";
-String ChatID = "********";
+String authToken = "ABCDEFGH";
+String ChatID = "ABCDEFGH";
 HTTPClient SolarESP_Telegram_HTTPClient;
 
 // for INA220
@@ -109,6 +109,9 @@ float hdc2080_temperature = -1; // C
 
 // for LED
 #define LED 2
+
+// Reconnect attempts settings
+#define RECONNECT_ATTEMPT_WAIT_TIME 500
 
 // General purpose variables
 int startTime = 0;
@@ -169,7 +172,20 @@ void onAwake()
   }
   else
   {
-    Serial.println("NTP unresponsive");
+    Serial.println("NTP connection - attempt #1: FAIL");
+    Delay(RECONNECT_ATTEMPT_WAIT_TIME);
+    if (GetTime() == 0) // Attempt to connect once again
+    {
+      TimeConnectionSuccess = 0;
+      Serial.print("Time Stamp: ");
+      Serial.println(String(TimeArray[0]) + ":" + String(TimeArray[1]) + ":" + String(TimeArray[2]) + " " + String(DateArray[0]) + "/" + String(DateArray[1]) + "/" + String(DateArray[2]));
+      FlashLED();
+    }
+    else
+    {
+      Serial.println("NTP connection - attempt #2: FAIL");
+      Serial.println("NTP unresponsive");
+    }
   }
 
   // Get weather
@@ -196,7 +212,33 @@ void onAwake()
   }
   else
   {
-    Serial.println("Weather server unresponsive");
+    Serial.println("OpenWeather connection - attempt #1: FAIL");
+    Delay(RECONNECT_ATTEMPT_WAIT_TIME);
+    if (GetWeather() == 0) // Attempt to connect once again
+    {
+      OpenWeatherConnectionSuccess = 0;
+      Serial.println("Weather by OpenWeather: " + OpenWeather_Weather);
+      Serial.println("Weather ID by OpenWeather: " + String(OpenWeather_WeatherCode));
+      Serial.println("Temperature by OpenWeather: " + String(OpenWeather_temperature) + " C");
+      Serial.println("Humidity by OpenWeather: " + String(OpenWeather_humidity) + " %");
+      Serial.println("Pressure by OpenWeather: " + String(OpenWeather_pressure) + " hPa");
+      Serial.println("Sunrise Time by OpenWeather: " + String(SunriseTime[0]) + ":" + String(SunriseTime[1]));
+      Serial.println("Sunset Time by OpenWeather: " + String(SunsetTime[0]) + ":" + String(SunsetTime[1]));
+      if (isDay == true && isNight == false)
+      {
+        Serial.println("It is daytime in " + city);
+      }
+      else if (isDay == false && isNight == true)
+      {
+        Serial.println("It is night time in " + city);
+      }
+      FlashLED();
+    }
+    else
+    {
+      Serial.println("OpenWeather connection - attempt #2: FAIL");
+      Serial.println("OpenWeather unresponsive");
+    }
   }
 
   // Read data from I2C devices
@@ -288,7 +330,19 @@ void onAwake()
   }
   else
   {
-    Serial.println("MQTT server unresponsive");
+    Serial.println("MQTT connection - attempt #1: FAIL");
+    Delay(RECONNECT_ATTEMPT_WAIT_TIME);
+    if (MQTT_Publish() == 0)
+    {
+      MQTTConnectionSuccess = 0;
+      Serial.println("MQTT publish successful");
+      FlashLED();
+    }
+    else
+    {
+      Serial.println("MQTT connection - attempt #2: FAIL");
+      Serial.println("MQTT server unresponsive");
+    }
   }
 
   // Send readings via Telegram bot
@@ -301,7 +355,19 @@ void onAwake()
   }
   else
   {
-    Serial.println("Telegram message not sent");
+    Serial.println("Telegram message - attempt #1: FAIL");
+    Delay(RECONNECT_ATTEMPT_WAIT_TIME);
+    if (SendTelegramMessage(ConstructMessage()) == 0)
+    {
+      TelegramConnectionSuccess = 0;
+      Serial.println("Telegram message sent");
+      FlashLED();
+    }
+    else
+    {
+      Serial.println("Telegram message - attempt #2: FAIL");
+      Serial.println("Telegram unresponsive");
+    }
   }
 }
 
