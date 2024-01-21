@@ -1,6 +1,6 @@
 # SolarESP
 
-I don't know what this thing should do for now
+ESP-based beacon
 
 [Adafruit IO Dashboard:](https://io.adafruit.com/chieftain_0/dashboards/solaresp)
 
