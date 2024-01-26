@@ -249,7 +249,6 @@ void onAwake()
   if (ina220_bat.isConnected() == true)
   {
     ina220_bat_found = 0;
-    ina220_bat.reset();
     ina220_bat.setMaxCurrentShunt(1.0, 0.1); // Mandatory to set these values (maxExpectedCurrent = 1.0A, Rshunt = 0.1ohm)
     batt_voltage = ina220_bat.getBusVoltage_mV();
     batt_current = ina220_bat.getCurrent_mA();
@@ -263,7 +262,6 @@ void onAwake()
   if (ina220_pv.isConnected() == true)
   {
     ina220_pv_found = 0;
-    ina220_pv.reset();
     ina220_pv.setMaxCurrentShunt(3.0, 0.1); // Mandatory to set these values (maxExpectedCurrent = 3.0A, Rshunt = 0.1ohm)
     pv_voltage = ina220_pv.getBusVoltage_mV();
     pv_current = ina220_pv.getCurrent_mA();
