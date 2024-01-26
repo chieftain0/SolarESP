@@ -279,7 +279,6 @@ void onAwake()
   if (hdc2080.isConnected() == true)
   {
     hdc2080_found = 0;
-    hdc2080.reset();    // datasheet says that it is a good practice
     hdc2080.setRate(0); // Manual reading
     hdc2080.triggerMeasurement();
     hdc2080_humidity = hdc2080.readHumidity();
