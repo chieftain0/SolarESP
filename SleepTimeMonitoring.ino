@@ -26,7 +26,7 @@ int MonitorSleepTime()
 
 void AlterSleepTime() // Alter the sleep time based on Day/Night, Weather, Battery charge level
 {
-  if (batt_voltage < EXREME_LOW_BAT_mV && batt_voltage > 0) // Extremely low battery
+  if (batt_voltage < EXTREME_LOW_BAT_mV && batt_voltage > 0) // Extremely low battery
   { 
     DEEP_SLEEP_TIME = 24 * 60 * 60 * EXTREME_LOW_BAT_SLEEP_FOREVER; // Sleep for 24 hours and hope the battery is charged or sleep until reset
     return;

@@ -29,7 +29,7 @@ uint64_t DEEP_SLEEP_TIME = 30 * 60; // in S
 #define LOW_BAT_SLEEP_FACTOR 3
 #define NIGHT_TIME_SLEEP_FACTOR 2
 #define BAD_WEATHER_SLEEP_FACTOR 2
-#define EXREME_LOW_BAT_mV 3200
+#define EXTREME_LOW_BAT_mV 3200
 #define LOW_BAT_mV 3300
 
 int WakeUpTimeArray[2] = {-1, -1};     // hh:mm
@@ -89,7 +89,7 @@ String authToken = "ABCDEFGH";
 String ChatID = "ABCDEFGH";
 HTTPClient SolarESP_Telegram_HTTPClient;
 
-//I2C pins
+// I2C pins
 #define SDA_PIN 7
 #define SCL_PIN 6
 
@@ -147,7 +147,7 @@ void onAwake()
   Delay(10);
   Serial.println();
   Serial.println("------------------------------------------------");
-  Serial.println("SolarESP is alive!");
+  Serial.println("SolarESP on " + String(ESP.getChipModel()) + " is alive!");
 
   // Connect to WiFi
   Serial.println("------------------------------------------------");
@@ -286,8 +286,8 @@ void onAwake()
     hdc2080.triggerMeasurement();
     hdc2080_humidity = hdc2080.readHumidity();
     hdc2080_temperature = hdc2080.readTemp();
-    Serial.println("Temperature recorded by HDC2080: " + String(hdc2080_temperature) + " C");
-    Serial.println("Humidity recorded by HDC2080: " + String(hdc2080_humidity) + " %");
+    Serial.println("HDC2080 Temperature: " + String(hdc2080_temperature) + " C");
+    Serial.println("HDC2080 Humidity: " + String(hdc2080_humidity) + " %");
   }
   else
   {
@@ -296,12 +296,12 @@ void onAwake()
 
   // Report Battery status
   Serial.println("------------------------------------------------");
-  if (batt_voltage < LOW_BAT_mV && batt_voltage > 0) // Low battery
+  if (batt_voltage <= EXTREME_LOW_BAT_mV && batt_voltage > 0) // Low battery
   {
-    if (batt_voltage < EXREME_LOW_BAT_mV && batt_voltage > 0) // Extremely low battery
-    {
-      Serial.println("Battery is extremely low: " + String(batt_voltage) + " mV");
-    }
+    Serial.println("Battery is extremely low: " + String(batt_voltage) + " mV");
+  }
+  else if (batt_voltage <= LOW_BAT_mV && batt_voltage > EXTREME_LOW_BAT_mV && batt_voltage > 0) // Extremely low battery
+  {
     Serial.println("Battery is low: " + String(batt_voltage) + " mV");
   }
   else
@@ -378,9 +378,11 @@ void Sleep()
   Serial.println("------------------------------------------------");
   Serial.println("Going to sleep for " + String(DEEP_SLEEP_TIME) + " s");
   Serial.println("Next Wake-Up: " + String(WakeUpTimeArray[0]) + ":" + String(WakeUpTimeArray[1]) + " " + String(WakeUpDateArray[0]) + "/" + String(WakeUpDateArray[1]) + "/" + String(WakeUpDateArray[2]));
+  Serial.println("------------------------------------------------");
   Serial.flush();
 
   // stop all activities of the PSoC
+  // makes me sleep better
   Serial.end();
   mqtt.disconnect();
   SolarESP_WiFiClientSecure.stop();
