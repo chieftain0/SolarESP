@@ -89,6 +89,10 @@ String authToken = "ABCDEFGH";
 String ChatID = "ABCDEFGH";
 HTTPClient SolarESP_Telegram_HTTPClient;
 
+//I2C pins
+#define SDA_PIN 7
+#define SCL_PIN 6
+
 // for INA220
 #define INA220_BAT_ADDRESS 0x44
 #define INA220_PV_ADDRESS 0x45
@@ -109,6 +113,7 @@ float hdc2080_temperature = -1; // C
 
 // for LED
 #define LED 2
+bool use_led_for_debug = 0;
 
 // Reconnect attempts settings
 #define RECONNECT_ATTEMPT_WAIT_TIME 500
@@ -243,7 +248,7 @@ void onAwake()
 
   // Read data from I2C devices
   // Will probably need to adjust and calibrate readings
-  Wire.begin(); // Use default SDA and SCL pins
+  Wire.begin(SDA_PIN, SCL_PIN);
   Serial.println("------------------------------------------------");
   // Read data from INA220s
   if (ina220_bat.isConnected() == true)
