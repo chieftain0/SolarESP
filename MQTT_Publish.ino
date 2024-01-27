@@ -73,7 +73,7 @@ int MQTT_Publish()
     }
     else
     {
-      BATTERY_LEVEL.publish((batt_voltage - 3000) * (100 - 0) / (4200 - 3000));
+      BATTERY_LEVEL.publish((batt_voltage - 3000) * (100 - 0) / (4250 - 3000));
     }
 
     mqtt.disconnect();
