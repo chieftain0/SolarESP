@@ -41,22 +41,7 @@ int MQTT_Publish()
 
   Adafruit_MQTT_Publish TIME_TO_SLEEP_NEXT_WAKE_UP = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/time-to-sleep-next-wake-up");
   Adafruit_MQTT_Publish BATTERY_LEVEL = Adafruit_MQTT_Publish(&mqtt, AIO_USERNAME "/feeds/battery-level");
-
-  // Variables to Publish:
-
-  // Date obtained from NTP (as last reported time) (done)
-
-  // INA220 batt mV and mA (done)
-  // INA220 pv mV and mA (done)
-  // HDC2080 temp and humidity (done)
-
-  // Weather by OpenWeather (done)
-  // Temperature, Humidity, Pressure (done)
-  // SunriseTime, SunsetTime (done)
-
-  // Time to sleep, Expected wake up time (done)
-
-  // INA220 batt mV as integer
+  
 
   SolarESP_WiFiClientSecure.setCACert(adafruitio_root_ca);
 
@@ -84,7 +69,7 @@ int MQTT_Publish()
 
     if (batt_voltage == -1)
     {
-      BATTERY_LEVEL.publish(69); // LoL
+      BATTERY_LEVEL.publish(uint32_t(69)); // LoL
     }
     else
     {
