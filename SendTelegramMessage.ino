@@ -79,7 +79,7 @@ String ConstructMessage()
   if (ina220_bat_found == 0)
   {
     message += "Battery Voltage: " + String(batt_voltage) + " mV\n";
-    message += "Battery Current: " + String(batt_current) + " mA";
+    message += "Battery Current: " + String(batt_current) + " mA\n";
   }
   else
   {
