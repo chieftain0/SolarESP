@@ -22,8 +22,14 @@
 #include <Arduino_JSON.h>
 #include <UnixTime.h>
 
+//Debug options
+#define LED 2
+bool use_led_for_debug = 0;
+bool use_serial_for_debug = 0;
+
+
 // deep sleep settings
-uint64_t DEEP_SLEEP_TIME = 30 * 60; // in S
+uint64_t DEEP_SLEEP_TIME = 15 * 60; // in S
 #define uS_TO_S_FACTOR 1000000
 #define EXTREME_LOW_BAT_SLEEP_FOREVER 1 // 1 - sleep for 24 hours, 0 - sleep until reset
 #define LOW_BAT_SLEEP_FACTOR 3
@@ -111,10 +117,6 @@ float pv_current = -1;          // mA
 float hdc2080_humidity = -1;    //%
 float hdc2080_temperature = -1; // C
 
-// for LED
-#define LED 2
-bool use_led_for_debug = 0;
-
 // Reconnect attempts settings
 #define RECONNECT_ATTEMPT_WAIT_TIME 500
 
@@ -136,18 +138,18 @@ void setup()
 
 void loop()
 {
-  pinMode(LED, OUTPUT); // for LED
   onAwake();
   Sleep();
 }
 
 void onAwake()
 {
-  if(Serial)
+
+  if(use_serial_for_debug == 1)
   {
     Serial.begin(115200);
   }
-  Delay(10);
+  
   Serial.println();
   Serial.println("------------------------------------------------");
   Serial.println("SolarESP on " + String(ESP.getChipModel()) + " is alive!");
