@@ -143,7 +143,10 @@ void loop()
 
 void onAwake()
 {
-  Serial.begin(115200);
+  if(Serial)
+  {
+    Serial.begin(115200);
+  }
   Delay(10);
   Serial.println();
   Serial.println("------------------------------------------------");
