@@ -134,17 +134,6 @@ String ConstructMessage()
     message += "Sleep time not changed\n";
   }
 
-  // MQTT status
-  message += "---------------------------------------\n";
-  if (MQTTConnectionSuccess == 0)
-  {
-    message += "MQTT publish successful\n";
-  }
-  else
-  {
-    message += "MQTT connection failed\n";
-  }
-
   message += "---------------------------------------\n";
   message += "Going to sleep for " + String(DEEP_SLEEP_TIME) + " s\n";
   message += "Next Wake-Up: " + String(WakeUpTimeArray[0]) + ":" + String(WakeUpTimeArray[1]) + " " + String(WakeUpDateArray[0]) + "/" + String(WakeUpDateArray[1]) + "/" + String(WakeUpDateArray[2]) + "\n";

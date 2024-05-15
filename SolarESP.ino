@@ -14,10 +14,6 @@
 #include "esp_wpa2.h"
 #include "time.h"
 
-#include "WiFiClientSecure.h"
-#include "Adafruit_MQTT.h"
-#include "Adafruit_MQTT_Client.h"
-
 #include <HTTPClient.h>
 #include <Arduino_JSON.h>
 #include <UnixTime.h>
@@ -82,13 +78,6 @@ bool isDay = true;
 bool isNight = true;
 UnixTime UnixStamp(TimeZone);
 
-// MQTT settings
-#define AIO_SERVER "io.adafruit.com"
-#define AIO_SERVERPORT 8883
-#define AIO_USERNAME "ABCDEFGH"
-#define AIO_KEY "ABCDEFGH"
-WiFiClientSecure SolarESP_WiFiClientSecure; // Client name for SSL/TLS communication
-Adafruit_MQTT_Client mqtt(&SolarESP_WiFiClientSecure, AIO_SERVER, AIO_SERVERPORT, AIO_USERNAME, AIO_KEY);
 
 // Telegram settings
 String authToken = "ABCDEFGH";
@@ -125,7 +114,6 @@ int startTime = 0;
 int WiFiConnectionSuccess = -1;
 int TimeConnectionSuccess = -1;
 int OpenWeatherConnectionSuccess = -1;
-int MQTTConnectionSuccess = -1;
 int TelegramConnectionSuccess = -1;
 int SleepTimeChanged = -1;
 int ina220_bat_found = -1;
@@ -327,31 +315,6 @@ void onAwake()
     Serial.println("Sleep time changed to " + String(DEEP_SLEEP_TIME) + " s");
   }
 
-  // Send readings to the MQTT server
-  Serial.println("------------------------------------------------");
-  if (MQTT_Publish() == 0)
-  {
-    MQTTConnectionSuccess = 0;
-    Serial.println("MQTT publish successful");
-    FlashLED();
-  }
-  else
-  {
-    Serial.println("MQTT connection - attempt #1: FAIL");
-    Delay(RECONNECT_ATTEMPT_WAIT_TIME);
-    if (MQTT_Publish() == 0)
-    {
-      MQTTConnectionSuccess = 0;
-      Serial.println("MQTT publish successful");
-      FlashLED();
-    }
-    else
-    {
-      Serial.println("MQTT connection - attempt #2: FAIL");
-      Serial.println("MQTT server unresponsive");
-    }
-  }
-
   // Send readings via Telegram bot
   Serial.println("------------------------------------------------");
   if (SendTelegramMessage(ConstructMessage()) == 0)
@@ -389,8 +352,6 @@ void Sleep()
   // stop all activities of the PSoC
   // makes me sleep better
   Serial.end();
-  mqtt.disconnect();
-  SolarESP_WiFiClientSecure.stop();
   SolarESP_OpenWeather_WiFiClient.stop();
   SolarESP_OpenWeather_HTTPClient.end();
   SolarESP_Telegram_HTTPClient.end();
