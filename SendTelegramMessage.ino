@@ -54,13 +54,14 @@ String ConstructMessage()
   message += "---------------------------------------\n";
   if (OpenWeatherConnectionSuccess == 0)
   {
-    message += "Weather by OpenWeather: " + OpenWeather_Weather + "\n";
-    message += "Weather ID by OpenWeather: " + String(OpenWeather_WeatherCode) + "\n";
-    message += "Temperature by OpenWeather: " + String(OpenWeather_temperature) + " C\n";
-    message += "Humidity by OpenWeather: " + String(OpenWeather_humidity) + " %\n";
-    message += "Pressure by OpenWeather: " + String(OpenWeather_pressure) + " hPA\n";
-    message += "Sunrise Time by OpenWeather: " + String(SunriseTime[0]) + ":" + String(SunriseTime[1]) + "\n";
-    message += "Sunset Time by OpenWeather: " + String(SunsetTime[0]) + ":" + String(SunsetTime[1]) + "\n";
+    message +="OpenWeather\n";
+    message += "Weather: " + OpenWeather_Weather + "\n";
+    message += "Weather ID: " + String(OpenWeather_WeatherCode) + "\n";
+    message += "Temperature: " + String(OpenWeather_temperature) + " C\n";
+    message += "Humidity: " + String(OpenWeather_humidity) + " %\n";
+    message += "Pressure: " + String(OpenWeather_pressure) + " hPA\n";
+    message += "Sunrise Time: " + String(SunriseTime[0]) + ":" + String(SunriseTime[1]) + "\n";
+    message += "Sunset Time: " + String(SunsetTime[0]) + ":" + String(SunsetTime[1]) + "\n";
     if (isDay == true && isNight == false)
     {
       message += "It is daytime in " + city + "\n";
@@ -122,6 +123,10 @@ String ConstructMessage()
   {
     message += "Battery is OK: " + String(batt_voltage) + " mV\n";
   }
+  
+  // Get PSoC temperature
+  message += "---------------------------------------\n";
+  message += "PSoC temperature: " + String(tempBuiltin) + " C\n";
 
   // Sleep time status
   message += "---------------------------------------\n";

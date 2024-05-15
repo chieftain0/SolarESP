@@ -78,6 +78,8 @@ bool isDay = true;
 bool isNight = true;
 UnixTime UnixStamp(TimeZone);
 
+// for built-in sensors
+float tempBuiltin;
 
 // Telegram settings
 String authToken = "ABCDEFGH";
@@ -215,13 +217,14 @@ void onAwake()
     if (GetWeather() == 0) // Attempt to connect once again
     {
       OpenWeatherConnectionSuccess = 0;
-      Serial.println("Weather by OpenWeather: " + OpenWeather_Weather);
-      Serial.println("Weather ID by OpenWeather: " + String(OpenWeather_WeatherCode));
-      Serial.println("Temperature by OpenWeather: " + String(OpenWeather_temperature) + " C");
-      Serial.println("Humidity by OpenWeather: " + String(OpenWeather_humidity) + " %");
-      Serial.println("Pressure by OpenWeather: " + String(OpenWeather_pressure) + " hPa");
-      Serial.println("Sunrise Time by OpenWeather: " + String(SunriseTime[0]) + ":" + String(SunriseTime[1]));
-      Serial.println("Sunset Time by OpenWeather: " + String(SunsetTime[0]) + ":" + String(SunsetTime[1]));
+      Serial.println("OpenWeather");
+      Serial.println("Weather: " + OpenWeather_Weather);
+      Serial.println("Weather ID: " + String(OpenWeather_WeatherCode));
+      Serial.println("Temperature: " + String(OpenWeather_temperature) + " C");
+      Serial.println("Humidity: " + String(OpenWeather_humidity) + " %");
+      Serial.println("Pressure: " + String(OpenWeather_pressure) + " hPa");
+      Serial.println("Sunrise Time: " + String(SunriseTime[0]) + ":" + String(SunriseTime[1]));
+      Serial.println("Sunset Time: " + String(SunsetTime[0]) + ":" + String(SunsetTime[1]));
       if (isDay == true && isNight == false)
       {
         Serial.println("It is daytime in " + city);
@@ -300,6 +303,13 @@ void onAwake()
   else
   {
     Serial.println("Battery is OK: " + String(batt_voltage) + " mV");
+  }
+
+  // Get PSoC temperature
+  if(readSoCtemp() == 0)
+  {
+    Serial.println("------------------------------------------------");
+    Serial.println("PSoC temperature: " + String(tempBuiltin) + " C");
   }
 
   // Monitor sleep times
