@@ -48,7 +48,7 @@ String SSID = "ABCDEFGH";
 #define TimeZone 4 // UAE timezone
 const char *NTPserver = "pool.ntp.org";
 const long GMToffset = TimeZone * 3600;
-const int DayLightOffset = 3600;
+const int DayLightOffset = 0;
 
 // for NTP parsed variables
 int TimeArray[3] = {0, 0, 0}; // hh:mm:ss
