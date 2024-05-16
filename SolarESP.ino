@@ -6,6 +6,11 @@
 /*   https://github.com/chieftain0/SolarESP     */
 
 // Search for "ABCDEFGH" and replace them with your data
+
+/*
+Almost all variables are global. I know that this is a bad practice,
+but it saves time coding and a little bit of storage
+*/
 #include <Wire.h>
 #include "INA219.h"
 #include <HDC2080.h>
@@ -20,6 +25,8 @@
 
 //Debug options
 #define LED 2
+
+//Set these to 0 to reduce energy consumption
 bool use_led_for_debug = 0;
 bool use_serial_for_debug = 0;
 
@@ -83,7 +90,7 @@ float tempBuiltin;
 
 // Telegram settings
 String authToken = "ABCDEFGH";
-String ChatID = "ABCDEFGH";
+String ChatID[2] = {"ABCDEFGH", "ABCDEFGH"}; // add more receivers here
 HTTPClient SolarESP_Telegram_HTTPClient;
 
 // I2C pins

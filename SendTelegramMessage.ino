@@ -1,27 +1,29 @@
 int SendTelegramMessage(String message)
 {
-  String url = "https://api.telegram.org/bot" + authToken + "/sendMessage"; // Construct the URL for the Telegram API endpoint
-
-  String payload = "chat_id=" + ChatID + "&parse_mode=MarkdownV2" + "&text=" + message; // Construct the payload
-
-  SolarESP_Telegram_HTTPClient.begin(url);
-  SolarESP_Telegram_HTTPClient.addHeader("Content-Type", "application/x-www-form-urlencoded");
-
-  if (SolarESP_Telegram_HTTPClient.POST(payload) > 0) // Send the POST request and receive response code
+  for (int i = 0; i < sizeof(ChatID)/sizeof(ChatID[0]); i++)
   {
-    SolarESP_Telegram_HTTPClient.end();
-    return 0;
+    String url = "https://api.telegram.org/bot" + authToken + "/sendMessage"; // Construct the URL for the Telegram API endpoint
+    String payload = "chat_id=" + ChatID[i] + "&parse_mode=MarkdownV2" + "&text=" + message; // Construct the payload
+
+    SolarESP_Telegram_HTTPClient.begin(url);
+    SolarESP_Telegram_HTTPClient.addHeader("Content-Type", "application/x-www-form-urlencoded");
+    
+    if (SolarESP_Telegram_HTTPClient.POST(payload) > 0) // Send the POST request and receive response code
+    {
+      SolarESP_Telegram_HTTPClient.end();
+    }
+    else
+    {
+      SolarESP_Telegram_HTTPClient.end();
+      return -1;
+    }
   }
-  else
-  {
-    SolarESP_Telegram_HTTPClient.end();
-    return -1;
-  }
+
+  return 0;
 }
 
 String ConstructMessage()
 {
-
   String message = "```SolarESP\n";
   message += "---------------------------------------\n";
   message += "SolarESP on " + String(ESP.getChipModel()) + " is alive!\n";
